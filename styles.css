@@ -3,6 +3,21 @@
    7-Segment Digital Display CSS
    ======================================== */
 
+/* Import echte Digital-7 7-Segment Font */
+@font-face {
+    font-family: 'Digital7';
+    src: url('./font/digital-7.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Digital7Mono';
+    src: url('./font/digital-7 (mono).ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -12,18 +27,19 @@
 body {
     background-color: #000000;
     color: #ff0000;
-    font-family: 'Courier New', monospace;
+    font-family: 'Digital7', 'Digital7Mono', monospace;
     overflow-x: hidden;
     min-height: 100vh;
 }
 
 .container {
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 8px;
     min-height: 100vh;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 10px;
 }
 
 /* ========================================
@@ -31,42 +47,23 @@ body {
    ======================================== */
 
 .timer-box {
-    background: linear-gradient(145deg, #111111, #000000);
-    border: 2px solid #330000;
-    border-radius: 15px;
-    padding: 30px 20px;
-    box-shadow: 
-        0 0 30px rgba(255, 0, 0, 0.3),
-        inset 0 0 20px rgba(255, 0, 0, 0.1);
+    padding: 8px 5px;
     position: relative;
 }
 
-.timer-box::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #ff0000, #880000, #ff0000);
-    border-radius: 15px;
-    z-index: -1;
-    opacity: 0.3;
-}
+/* Entferne Box-Styling */
 
 .timer-title {
     text-align: center;
-    margin-bottom: 25px;
-    font-size: clamp(1rem, 3vw, 1.8rem);
+    margin-bottom: 8px;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
     font-weight: bold;
-    text-shadow: 0 0 10px #ff0000;
     letter-spacing: 1px;
-    line-height: 1.3;
+    line-height: 1.1;
 }
 
 .uptime .timer-title {
     color: #00ff00;
-    text-shadow: 0 0 10px #00ff00;
 }
 
 /* ========================================
@@ -74,147 +71,116 @@ body {
    ======================================== */
 
 .timer-display {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 20px;
-    justify-items: center;
-    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
 .time-unit {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
-    gap: 10px;
+    gap: 1px;
+    margin: 0 2px;
 }
 
 .label {
-    font-size: clamp(0.7rem, 1.5vw, 1rem);
+    font-size: clamp(0.5rem, 1.2vw, 0.8rem);
     font-weight: bold;
-    letter-spacing: 2px;
-    text-shadow: 0 0 5px #ff0000;
+    letter-spacing: 0.5px;
     opacity: 0.8;
 }
 
 .uptime .label {
     color: #00ff00;
-    text-shadow: 0 0 5px #00ff00;
 }
 
 .digit-group {
     display: flex;
-    gap: 8px;
+    gap: 2px;
 }
 
-/* ========================================
-   7-SEGMENT DIGIT STYLING
-   ======================================== */
-
-.digit {
-    position: relative;
-    width: clamp(40px, 8vw, 80px);
-    height: clamp(70px, 14vw, 140px);
-    background-color: #111111;
-    border: 1px solid #330000;
-    border-radius: 8px;
+.separator {
+    font-family: 'Digital7', 'Digital7Mono', monospace;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: #ff0000;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Courier New', monospace;
-    font-size: clamp(2rem, 6vw, 4rem);
-    font-weight: bold;
-    color: #ff0000;
-    text-shadow: 
-        0 0 10px #ff0000,
-        0 0 20px #ff0000,
-        0 0 30px #ff0000;
-    box-shadow: 
-        inset 0 0 20px rgba(255, 0, 0, 0.1),
-        0 0 15px rgba(255, 0, 0, 0.4);
-    transition: all 0.3s ease;
+    margin: 0 1px;
 }
 
-.uptime .digit {
+.uptime .separator {
     color: #00ff00;
-    text-shadow: 
-        0 0 10px #00ff00,
-        0 0 20px #00ff00,
-        0 0 30px #00ff00;
-    box-shadow: 
-        inset 0 0 20px rgba(0, 255, 0, 0.1),
-        0 0 15px rgba(0, 255, 0, 0.4);
-    border-color: #003300;
 }
 
-.digit:hover {
-    transform: scale(1.05);
-    box-shadow: 
-        inset 0 0 20px rgba(255, 0, 0, 0.2),
-        0 0 25px rgba(255, 0, 0, 0.6);
+/* ========================================
+   PROFESSIONELLE DSEG 7-SEGMENT FONT
+   ======================================== */
+
+.digit {
+    font-family: 'Digital7', 'Digital7Mono', monospace;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: normal;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(40px, 5vw, 70px);
+    height: clamp(60px, 8vw, 100px);
+    background: transparent;
+    margin: 1px;
 }
 
-.uptime .digit:hover {
-    box-shadow: 
-        inset 0 0 20px rgba(0, 255, 0, 0.2),
-        0 0 25px rgba(0, 255, 0, 0.6);
+/* Hintergrund-8 für alle inaktiven Segmente */
+.digit::before {
+    content: '8';
+    position: absolute;
+    color: rgba(255, 0, 0, 0.1);
+    font-family: 'Digital7', 'Digital7Mono', monospace;
+    font-size: inherit;
+    z-index: 1;
+}
+
+/* Aktuelle Ziffer über dem Hintergrund */
+.digit-content {
+    position: relative;
+    z-index: 2;
+    color: #ff0000;
+    /* Kein text-shadow mehr für saubere Darstellung */
+}
+
+/* Zentriere den Uptime-Timer richtig */
+.uptime .timer-display {
+    max-width: 500px;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* Grüne Digits für Uptime */
+.uptime .digit::before {
+    color: rgba(0, 255, 0, 0.1);
+}
+
+.uptime .digit-content {
+    color: #00ff00;
+    /* Kein text-shadow mehr für saubere Darstellung */
 }
 
 /* ========================================
    ENHANCED 7-SEGMENT DISPLAY EFFECT
    ======================================== */
 
-.digit::before {
-    content: '8';
-    position: absolute;
-    color: rgba(255, 0, 0, 0.1);
-    text-shadow: none;
-    z-index: -1;
-    font-size: inherit;
-    font-weight: inherit;
-}
-
-.uptime .digit::before {
-    color: rgba(0, 255, 0, 0.1);
-}
+/* Hintergrund-8 entfernt */
 
 /* ========================================
    ANIMATION EFFECTS
    ======================================== */
 
-.digit {
-    animation: digitPulse 3s ease-in-out infinite;
-}
-
-@keyframes digitPulse {
-    0%, 100% {
-        box-shadow: 
-            inset 0 0 20px rgba(255, 0, 0, 0.1),
-            0 0 15px rgba(255, 0, 0, 0.4);
-    }
-    50% {
-        box-shadow: 
-            inset 0 0 20px rgba(255, 0, 0, 0.2),
-            0 0 25px rgba(255, 0, 0, 0.6);
-    }
-}
-
-.uptime .digit {
-    animation: digitPulseGreen 3s ease-in-out infinite;
-}
-
-@keyframes digitPulseGreen {
-    0%, 100% {
-        box-shadow: 
-            inset 0 0 20px rgba(0, 255, 0, 0.1),
-            0 0 15px rgba(0, 255, 0, 0.4);
-    }
-    50% {
-        box-shadow: 
-            inset 0 0 20px rgba(0, 255, 0, 0.2),
-            0 0 25px rgba(0, 255, 0, 0.6);
-    }
-}
+/* Alle Animationen und Glow-Effekte entfernt */
 
 /* ========================================
    RESPONSIVE DESIGN
@@ -270,35 +236,6 @@ body {
    ACCESSIBILITY
    ======================================== */
 
-@media (prefers-reduced-motion: reduce) {
-    .digit {
-        animation: none;
-    }
-    
-    .digit:hover {
-        transform: none;
-    }
-}
+/* Alle Effekte entfernt für sauberes Design */
 
-/* ========================================
-   GLITCH EFFECT (Optional Enhancement)
-   ======================================== */
-
-.timer-box:nth-child(odd) {
-    animation: subtleGlitch 10s ease-in-out infinite;
-}
-
-@keyframes subtleGlitch {
-    0%, 96%, 100% {
-        transform: translateX(0);
-    }
-    97% {
-        transform: translateX(2px);
-    }
-    98% {
-        transform: translateX(-2px);
-    }
-    99% {
-        transform: translateX(1px);
-    }
-}
+/* Ende */

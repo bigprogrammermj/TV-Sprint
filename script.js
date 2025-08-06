@@ -113,7 +113,7 @@ function calculateElapsedTime(startDate, currentDate = new Date()) {
 }
 
 /**
- * Aktualisiert die Anzeige einer Zahl (zwei Stellen)
+ * Aktualisiert die Anzeige einer Zahl (zwei Stellen) mit authentischer 7-Segment-Anzeige
  * @param {string} elementPrefix - Element-Präfix
  * @param {number} value - Wert
  */
@@ -123,12 +123,31 @@ function updateDigitDisplay(elementPrefix, value) {
     const tensElement = document.getElementById(`${elementPrefix}-tens`);
     const onesElement = document.getElementById(`${elementPrefix}-ones`);
     
-    if (tensElement) tensElement.textContent = paddedValue[0];
-    if (onesElement) onesElement.textContent = paddedValue[1];
+    updateDigitContent(tensElement, paddedValue[0]);
+    updateDigitContent(onesElement, paddedValue[1]);
 }
 
 /**
- * Aktualisiert die Anzeige einer Zahl (drei Stellen)
+ * Aktualisiert den Inhalt eines einzelnen Digits mit Hintergrund-Segmenten
+ * @param {Element} digitElement - Das Digit-Element
+ * @param {string} digit - Die anzuzeigende Ziffer
+ */
+function updateDigitContent(digitElement, digit) {
+    if (!digitElement) return;
+    
+    // Schaue nach vorhandenem span oder erstelle neues
+    let contentSpan = digitElement.querySelector('.digit-content');
+    if (!contentSpan) {
+        contentSpan = document.createElement('span');
+        contentSpan.className = 'digit-content';
+        digitElement.appendChild(contentSpan);
+    }
+    
+    contentSpan.textContent = digit;
+}
+
+/**
+ * Aktualisiert die Anzeige einer Zahl (drei Stellen) mit authentischer 7-Segment-Anzeige
  * @param {string} elementPrefix - Element-Präfix
  * @param {number} value - Wert
  */
@@ -139,9 +158,9 @@ function updateDigitDisplayThree(elementPrefix, value) {
     const tensElement = document.getElementById(`${elementPrefix}-tens`);
     const onesElement = document.getElementById(`${elementPrefix}-ones`);
     
-    if (hundredsElement) hundredsElement.textContent = paddedValue[0];
-    if (tensElement) tensElement.textContent = paddedValue[1];
-    if (onesElement) onesElement.textContent = paddedValue[2];
+    updateDigitContent(hundredsElement, paddedValue[0]);
+    updateDigitContent(tensElement, paddedValue[1]);
+    updateDigitContent(onesElement, paddedValue[2]);
 }
 
 /**
@@ -198,18 +217,17 @@ function updateAllTimers() {
 }
 
 /**
- * Digit-Update-Animation
+ * Digit-Update-Animation (ohne Glow-Effekt)
  * @param {Element} element - Element
  */
 function animateDigitUpdate(element) {
     if (!element) return;
     
+    // Nur noch scale-Animation, kein text-shadow mehr
     element.style.transform = 'scale(1.1)';
-    element.style.textShadow = '0 0 15px #ff0000, 0 0 25px #ff0000, 0 0 35px #ff0000';
     
     setTimeout(() => {
         element.style.transform = 'scale(1)';
-        element.style.textShadow = '0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000';
     }, 200);
 }
 
@@ -299,8 +317,20 @@ function monitorPerformance() {
 
 // App starten, sobald DOM geladen ist
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialisiere alle digit-Elemente für authentische 7-Segment-Anzeige
+        const allDigits = document.querySelectorAll('.digit');
+        allDigits.forEach(digit => {
+            updateDigitContent(digit, '8'); // Starte mit "8" als Initialisierung
+        });
+        initializeApp();
+    });
 } else {
+    // Initialisiere alle digit-Elemente für authentische 7-Segment-Anzeige
+    const allDigits = document.querySelectorAll('.digit');
+    allDigits.forEach(digit => {
+        updateDigitContent(digit, '8'); // Starte mit "8" als Initialisierung
+    });
     initializeApp();
 }
 
