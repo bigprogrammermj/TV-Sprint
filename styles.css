@@ -1,0 +1,304 @@
+/* ========================================
+   TIMER WEBSEITE - BOMBEN-ENTSCHÄRFUNG STIL
+   7-Segment Digital Display CSS
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000000;
+    color: #ff0000;
+    font-family: 'Courier New', monospace;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+/* ========================================
+   TIMER BOX STYLING
+   ======================================== */
+
+.timer-box {
+    background: linear-gradient(145deg, #111111, #000000);
+    border: 2px solid #330000;
+    border-radius: 15px;
+    padding: 30px 20px;
+    box-shadow: 
+        0 0 30px rgba(255, 0, 0, 0.3),
+        inset 0 0 20px rgba(255, 0, 0, 0.1);
+    position: relative;
+}
+
+.timer-box::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff0000, #880000, #ff0000);
+    border-radius: 15px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.timer-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff0000;
+    letter-spacing: 1px;
+    line-height: 1.3;
+}
+
+.uptime .timer-title {
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* ========================================
+   TIMER DISPLAY LAYOUT
+   ======================================== */
+
+.timer-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.label {
+    font-size: clamp(0.7rem, 1.5vw, 1rem);
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #ff0000;
+    opacity: 0.8;
+}
+
+.uptime .label {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.digit-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* ========================================
+   7-SEGMENT DIGIT STYLING
+   ======================================== */
+
+.digit {
+    position: relative;
+    width: clamp(40px, 8vw, 80px);
+    height: clamp(70px, 14vw, 140px);
+    background-color: #111111;
+    border: 1px solid #330000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #ff0000,
+        0 0 30px #ff0000;
+    box-shadow: 
+        inset 0 0 20px rgba(255, 0, 0, 0.1),
+        0 0 15px rgba(255, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.uptime .digit {
+    color: #00ff00;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    box-shadow: 
+        inset 0 0 20px rgba(0, 255, 0, 0.1),
+        0 0 15px rgba(0, 255, 0, 0.4);
+    border-color: #003300;
+}
+
+.digit:hover {
+    transform: scale(1.05);
+    box-shadow: 
+        inset 0 0 20px rgba(255, 0, 0, 0.2),
+        0 0 25px rgba(255, 0, 0, 0.6);
+}
+
+.uptime .digit:hover {
+    box-shadow: 
+        inset 0 0 20px rgba(0, 255, 0, 0.2),
+        0 0 25px rgba(0, 255, 0, 0.6);
+}
+
+/* ========================================
+   ENHANCED 7-SEGMENT DISPLAY EFFECT
+   ======================================== */
+
+.digit::before {
+    content: '8';
+    position: absolute;
+    color: rgba(255, 0, 0, 0.1);
+    text-shadow: none;
+    z-index: -1;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.uptime .digit::before {
+    color: rgba(0, 255, 0, 0.1);
+}
+
+/* ========================================
+   ANIMATION EFFECTS
+   ======================================== */
+
+.digit {
+    animation: digitPulse 3s ease-in-out infinite;
+}
+
+@keyframes digitPulse {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 20px rgba(255, 0, 0, 0.1),
+            0 0 15px rgba(255, 0, 0, 0.4);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 20px rgba(255, 0, 0, 0.2),
+            0 0 25px rgba(255, 0, 0, 0.6);
+    }
+}
+
+.uptime .digit {
+    animation: digitPulseGreen 3s ease-in-out infinite;
+}
+
+@keyframes digitPulseGreen {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 20px rgba(0, 255, 0, 0.1),
+            0 0 15px rgba(0, 255, 0, 0.4);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 20px rgba(0, 255, 0, 0.2),
+            0 0 25px rgba(0, 255, 0, 0.6);
+    }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        gap: 25px;
+    }
+    
+    .timer-box {
+        padding: 20px 15px;
+    }
+    
+    .timer-display {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 15px;
+    }
+    
+    .digit-group {
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        gap: 20px;
+    }
+    
+    .timer-display {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .time-unit {
+        gap: 8px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .timer-display {
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 1400px;
+    }
+    
+    .digit {
+        width: 100px;
+        height: 180px;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .digit {
+        animation: none;
+    }
+    
+    .digit:hover {
+        transform: none;
+    }
+}
+
+/* ========================================
+   GLITCH EFFECT (Optional Enhancement)
+   ======================================== */
+
+.timer-box:nth-child(odd) {
+    animation: subtleGlitch 10s ease-in-out infinite;
+}
+
+@keyframes subtleGlitch {
+    0%, 96%, 100% {
+        transform: translateX(0);
+    }
+    97% {
+        transform: translateX(2px);
+    }
+    98% {
+        transform: translateX(-2px);
+    }
+    99% {
+        transform: translateX(1px);
+    }
+}
