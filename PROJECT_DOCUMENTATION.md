@@ -103,10 +103,29 @@ Eine responsive HTML-Webseite mit digitalen 7-Segment-Anzeigen, die verschiedene
 - [FERTIG] CSS-Responsive-Design
 - [FERTIG] Feintuning der Layouts
 
-### Phase 5: Testing & Optimierung (5 Min) [IN BEARBEITUNG]
+### Phase 5: Testing & Optimierung (5 Min) [FERTIG]
 - [FERTIG] Cross-Browser-Testing
 - [FERTIG] Performance-Optimierung
-- [IN BEARBEITUNG] Finale Anpassungen
+- [FERTIG] Finale Anpassungen
+
+## 5.1. Finale Design-Spezifikationen
+
+### Layout & Abstände:
+- **Container**: `gap: 40px` zwischen Timer-Einheiten, vertikal zentriert
+- **Timer-Titel**: `margin-bottom: -32px` (sehr kompakt)
+- **Labels**: `margin-top: -32px` (sehr kompakt an Zahlen)
+- **Timer-Display**: `gap: 8px` zwischen Zeiteinheiten
+
+### 7-Segment-Display Größen:
+- **Digit-Größe**: `clamp(5rem, 12vw, 9rem)` 
+- **Digit-Dimensionen**: `80px-140px` breit, `120px-200px` hoch
+- **Digit-Overlap**: `-40px` margin für kompakte Ziffern-Paare
+- **Separator**: `clamp(3rem, 6vw, 5rem)`, Position `top: -5px`
+
+### Farben & Effekte:
+- **Rote Timer**: `#ff1a1a` mit Glow-Effekt (text-shadow)
+- **Grüner Uptime**: `#00ff00` ohne Glow-Effekt
+- **Inaktive Segmente**: `rgba(255,0,0,0.15)` für rote, `rgba(0,255,0,0.1)` für grüne
 
 ## 6. Erfolgsmetriken
 

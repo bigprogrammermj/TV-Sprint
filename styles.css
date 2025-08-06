@@ -33,13 +33,13 @@ body {
 }
 
 .container {
-    padding: 10px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 40px;
     min-height: 100vh;
-    justify-content: flex-start;
-    padding-top: 10px;
+    justify-content: center;
+    padding-top: 8px;
 }
 
 /* ========================================
@@ -47,7 +47,7 @@ body {
    ======================================== */
 
 .timer-box {
-    padding: 8px 5px;
+    padding: 4px;
     position: relative;
 }
 
@@ -55,7 +55,7 @@ body {
 
 .timer-title {
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: -32px;
     font-size: clamp(1.2rem, 3vw, 1.8rem);
     font-weight: bold;
     letter-spacing: 1px;
@@ -74,8 +74,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    max-width: 800px;
+    gap: 8px;
+    max-width: 2000px;
     margin: 0 auto;
 }
 
@@ -83,34 +83,51 @@ body {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
-    gap: 1px;
-    margin: 0 2px;
+    gap: 4px;
+    margin: 0 4px;
 }
 
 .label {
-    font-size: clamp(0.5rem, 1.2vw, 0.8rem);
+    font-size: clamp(1rem, 2.4vw, 1.6rem);
     font-weight: bold;
     letter-spacing: 0.5px;
     opacity: 0.8;
+    margin-top: -32px;
 }
+
+
 
 .uptime .label {
     color: #00ff00;
 }
 
+.uptime .separator {
+    color: #00ff00;
+    top: -5px;
+}
+
 .digit-group {
     display: flex;
-    gap: 2px;
+    gap: 0px;
 }
+
+.digit-group .digit:not(:first-child) {
+    margin-left: -40px;
+}
+
+
 
 .separator {
     font-family: 'Digital7', 'Digital7Mono', monospace;
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    color: #ff0000;
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: #ff1a1a;
+    text-shadow: 0 0 6px rgba(255, 26, 26, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 1px;
+    margin: 0 4px;
+    position: relative;
+    top: -5px;
 }
 
 .uptime .separator {
@@ -123,14 +140,14 @@ body {
 
 .digit {
     font-family: 'Digital7', 'Digital7Mono', monospace;
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(5rem, 12vw, 9rem);
     font-weight: normal;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(40px, 5vw, 70px);
-    height: clamp(60px, 8vw, 100px);
+    width: clamp(80px, 10vw, 140px);
+    height: clamp(120px, 16vw, 200px);
     background: transparent;
     margin: 1px;
 }
@@ -139,7 +156,7 @@ body {
 .digit::before {
     content: '8';
     position: absolute;
-    color: rgba(255, 0, 0, 0.1);
+    color: rgba(255, 0, 0, 0.15);
     font-family: 'Digital7', 'Digital7Mono', monospace;
     font-size: inherit;
     z-index: 1;
@@ -149,8 +166,8 @@ body {
 .digit-content {
     position: relative;
     z-index: 2;
-    color: #ff0000;
-    /* Kein text-shadow mehr für saubere Darstellung */
+    color: #ff1a1a;
+    text-shadow: 0 0 7px rgba(255, 26, 26, 0.6), 0 0 15px rgba(255, 26, 26, 0.45);
 }
 
 /* Zentriere den Uptime-Timer richtig */
@@ -167,7 +184,6 @@ body {
 
 .uptime .digit-content {
     color: #00ff00;
-    /* Kein text-shadow mehr für saubere Darstellung */
 }
 
 /* ========================================

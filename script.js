@@ -9,7 +9,7 @@
 const TARGET_DATES = {
     timer1: new Date('2025-09-27T23:59:59'),  // 27.09.2025
     timer2: new Date('2025-10-11T23:59:59'),  // 11.10.2025
-    timer3: new Date('2026-01-01T00:00:00'),  // 01.01.2026
+    timer3: new Date('2026-01-01T23:59:59'),  // 01.01.2026
     timer4: new Date('2026-01-28T23:59:59')   // 28.01.2026
 };
 
@@ -164,12 +164,13 @@ function updateDigitDisplayThree(elementPrefix, value) {
 }
 
 /**
- * Aktualisiert einen Countdown-Timer
+ * Aktualisiert einen Countdown-Timer (synchronisiert)
  * @param {string} timerPrefix - Timer-Präfix
  * @param {Date} targetDate - Zieldatum
+ * @param {Date} currentTime - Aktuelle Zeit für Synchronisation
  */
-function updateCountdownTimer(timerPrefix, targetDate) {
-    const timeDiff = calculateTimeDifference(targetDate);
+function updateCountdownTimerSync(timerPrefix, targetDate, currentTime) {
+    const timeDiff = calculateTimeDifference(targetDate, currentTime);
     
     if (timeDiff.expired) {
         // Timer ist abgelaufen - alle Werte auf 00 setzen
@@ -191,29 +192,93 @@ function updateCountdownTimer(timerPrefix, targetDate) {
 }
 
 /**
- * Aktualisiert den Uptime-Counter
+ * Legacy-Funktion für Kompatibilität
  */
-function updateUptimeCounter() {
-    const elapsedTime = calculateElapsedTime(UPTIME_START);
+function updateCountdownTimer(timerPrefix, targetDate) {
+    updateCountdownTimerSync(timerPrefix, targetDate, new Date());
+}
+
+/**
+ * Aktualisiert den Uptime-Counter (synchronisiert)
+ * @param {Date} currentTime - Aktuelle Zeit für Synchronisation
+ */
+function updateUptimeCounterSync(currentTime) {
+    const elapsedTime = calculateElapsedTime(UPTIME_START, currentTime);
     
-    updateDigitDisplayThree('uptime-days', elapsedTime.days);
+    // Uptime verwendet jetzt auch 6 Zeiteinheiten wie die anderen Timer
+    updateDigitDisplay('uptime-months', Math.floor(elapsedTime.days / 30));
+    updateDigitDisplay('uptime-weeks', Math.floor((elapsedTime.days % 30) / 7));
+    updateDigitDisplay('uptime-days', elapsedTime.days % 7);
     updateDigitDisplay('uptime-hours', elapsedTime.hours);
     updateDigitDisplay('uptime-minutes', elapsedTime.minutes);
     updateDigitDisplay('uptime-seconds', elapsedTime.seconds);
 }
 
 /**
+ * Optimierte Timer-Display-Funktion
+ * @param {string} timerPrefix - Timer-Präfix
+ * @param {Object} timeDiff - Zeit-Differenz-Objekt
+ */
+function updateTimerDisplay(timerPrefix, timeDiff) {
+    if (timeDiff.expired) {
+        // Timer ist abgelaufen - alle Werte auf 00 setzen
+        updateDigitDisplay(`${timerPrefix}-months`, 0);
+        updateDigitDisplay(`${timerPrefix}-weeks`, 0);
+        updateDigitDisplay(`${timerPrefix}-days`, 0);
+        updateDigitDisplay(`${timerPrefix}-hours`, 0);
+        updateDigitDisplay(`${timerPrefix}-minutes`, 0);
+        updateDigitDisplay(`${timerPrefix}-seconds`, 0);
+    } else {
+        // Timer läuft - Werte aktualisieren
+        updateDigitDisplay(`${timerPrefix}-months`, timeDiff.months);
+        updateDigitDisplay(`${timerPrefix}-weeks`, timeDiff.weeks);
+        updateDigitDisplay(`${timerPrefix}-days`, timeDiff.days);
+        updateDigitDisplay(`${timerPrefix}-hours`, timeDiff.hours);
+        updateDigitDisplay(`${timerPrefix}-minutes`, timeDiff.minutes);
+        updateDigitDisplay(`${timerPrefix}-seconds`, timeDiff.seconds);
+    }
+}
+
+/**
+ * Optimierte Uptime-Display-Funktion
+ * @param {Object} elapsedTime - Vergangene Zeit-Objekt
+ */
+function updateUptimeDisplay(elapsedTime) {
+    updateDigitDisplay('uptime-months', Math.floor(elapsedTime.days / 30));
+    updateDigitDisplay('uptime-weeks', Math.floor((elapsedTime.days % 30) / 7));
+    updateDigitDisplay('uptime-days', elapsedTime.days % 7);
+    updateDigitDisplay('uptime-hours', elapsedTime.hours);
+    updateDigitDisplay('uptime-minutes', elapsedTime.minutes);
+    updateDigitDisplay('uptime-seconds', elapsedTime.seconds);
+}
+
+/**
+ * Legacy-Funktion für Kompatibilität
+ */
+function updateUptimeCounter() {
+    updateUptimeCounterSync(new Date());
+}
+
+/**
  * Hauptupdate-Funktion für alle Timer
  */
 function updateAllTimers() {
-    // Countdown-Timer aktualisieren
-    updateCountdownTimer('timer1', TARGET_DATES.timer1);
-    updateCountdownTimer('timer2', TARGET_DATES.timer2);
-    updateCountdownTimer('timer3', TARGET_DATES.timer3);
-    updateCountdownTimer('timer4', TARGET_DATES.timer4);
+    // Aktuelle Zeit einmal für alle Timer berechnen (Synchronisation)
+    const currentTime = new Date();
     
-    // Uptime-Counter aktualisieren
-    updateUptimeCounter();
+    // Alle Timer-Berechnungen gleichzeitig durchführen
+    const timer1Data = calculateTimeDifference(TARGET_DATES.timer1, currentTime);
+    const timer2Data = calculateTimeDifference(TARGET_DATES.timer2, currentTime);
+    const timer3Data = calculateTimeDifference(TARGET_DATES.timer3, currentTime);
+    const timer4Data = calculateTimeDifference(TARGET_DATES.timer4, currentTime);
+    const uptimeData = calculateElapsedTime(UPTIME_START, currentTime);
+    
+    // Alle Timer gleichzeitig aktualisieren
+    updateTimerDisplay('timer1', timer1Data);
+    updateTimerDisplay('timer2', timer2Data);
+    updateTimerDisplay('timer3', timer3Data);
+    updateTimerDisplay('timer4', timer4Data);
+    updateUptimeDisplay(uptimeData);
 }
 
 /**
@@ -276,8 +341,17 @@ function initializeApp() {
     // Erste Aktualisierung
     updateAllTimers();
     
-    // Timer für regelmäßige Updates (ultra flüssig - alle 100ms)
-    setInterval(updateAllTimersWithAnimation, 100);
+    // Timer perfekt auf volle Sekunden synchronisieren
+    const now = new Date();
+    const msUntilNextSecond = 1000 - now.getMilliseconds();
+    
+    setTimeout(() => {
+        // Erste Aktualisierung auf der vollen Sekunde
+        updateAllTimersWithAnimation();
+        
+        // Dann jede Sekunde exakt weiter
+        setInterval(updateAllTimersWithAnimation, 1000);
+    }, msUntilNextSecond);
     
     // Debug-Log alle 10 Sekunden
     setInterval(logTimerStatus, 10000);
