@@ -255,3 +255,91 @@ body {
 /* Alle Effekte entfernt für sauberes Design */
 
 /* Ende */
+/* ========================================
+   TV COMPATIBILITY OPTIMIZATIONS
+   WebOS & Smart TV Browser Support
+   ======================================== */
+
+/* Fallbacks für ältere Browser ohne clamp() Support */
+.digit {
+    font-size: 6rem; /* TV Fallback */
+    width: 100px; /* TV Fallback */
+    height: 150px; /* TV Fallback */
+}
+
+.separator {
+    font-size: 3rem; /* TV Fallback */
+}
+
+.timer-title {
+    font-size: 1.8rem; /* TV Fallback */
+}
+
+.label {
+    font-size: 1.2rem; /* TV Fallback */
+}
+
+/* TV-spezifische Optimierungen für große Bildschirme */
+@media screen and (min-width: 1920px) {
+    .digit {
+        font-size: 8rem !important;
+        width: 120px !important;
+        height: 180px !important;
+    }
+    
+    .separator {
+        font-size: 4.5rem !important;
+        margin: 0 8px !important;
+    }
+    
+    .timer-title {
+        font-size: 2.2rem !important;
+        margin-bottom: -40px !important;
+    }
+    
+    .label {
+        font-size: 1.4rem !important;
+        margin-top: -40px !important;
+    }
+    
+    .container {
+        gap: 80px !important;
+        padding: 40px !important;
+    }
+    
+    .timer-display {
+        gap: 12px !important;
+    }
+}
+
+/* Spezielle WebOS Browser Fixes */
+@media screen and (min-device-width: 1920px) {
+    body {
+        zoom: 1.2; /* WebOS Browser Zoom Fix */
+    }
+    
+    .digit-group .digit:not(:first-child) {
+        margin-left: -50px !important;
+    }
+}
+
+/* 4K TV Optimierungen */
+@media screen and (min-width: 3840px) {
+    .digit {
+        font-size: 12rem !important;
+        width: 180px !important;
+        height: 270px !important;
+    }
+    
+    .separator {
+        font-size: 6rem !important;
+    }
+    
+    .timer-title {
+        font-size: 3rem !important;
+    }
+    
+    .label {
+        font-size: 2rem !important;
+    }
+}
