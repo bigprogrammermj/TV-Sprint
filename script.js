@@ -23,6 +23,8 @@ let APP_START_TIME = null;
  * Initialisierung der App mit Persistierung
  */
 function initializeApp() {
+    console.log('🚀 App wird initialisiert...');
+    
     // Lade oder erstelle App-Start-Zeit
     const storedAppStart = localStorage.getItem('appStartTime');
     if (storedAppStart) {
@@ -44,9 +46,11 @@ function initializeApp() {
     const now = new Date();
     const msUntilNextSecond = 1000 - now.getMilliseconds();
     
+    console.log('⏰ Timer-Intervall wird in', msUntilNextSecond, 'ms gestartet');
     setTimeout(() => {
         updateAllTimersWithAnimation();
         setInterval(updateAllTimersWithAnimation, 1000);
+        console.log('✅ Timer-Intervall gestartet');
     }, msUntilNextSecond);
 }
 
@@ -69,20 +73,24 @@ function initializeUptime() {
  * Speichere aktuellen Timer-Zustand für Persistierung
  */
 function saveTimerState() {
-    const currentState = {
-        appStartTime: APP_START_TIME.toISOString(),
-        uptimeStart: UPTIME_START.toISOString(),
-        lastUpdate: new Date().toISOString(),
-        targetDates: {
-            timer1: TARGET_DATES.timer1.toISOString(),
-            timer2: TARGET_DATES.timer2.toISOString(),
-            timer3: TARGET_DATES.timer3.toISOString(),
-            timer4: TARGET_DATES.timer4.toISOString()
-        }
-    };
-    
-    localStorage.setItem('timerState', JSON.stringify(currentState));
-    console.log('💾 Timer-Zustand gespeichert');
+    try {
+        const currentState = {
+            appStartTime: APP_START_TIME.toISOString(),
+            uptimeStart: UPTIME_START.toISOString(),
+            lastUpdate: new Date().toISOString(),
+            targetDates: {
+                timer1: TARGET_DATES.timer1.toISOString(),
+                timer2: TARGET_DATES.timer2.toISOString(),
+                timer3: TARGET_DATES.timer3.toISOString(),
+                timer4: TARGET_DATES.timer4.toISOString()
+            }
+        };
+        
+        localStorage.setItem('timerState', JSON.stringify(currentState));
+        // console.log('💾 Timer-Zustand gespeichert');
+    } catch (error) {
+        console.error('❌ Fehler beim Speichern des Timer-Zustands:', error);
+    }
 }
 
 /**
@@ -94,21 +102,6 @@ function loadTimerState() {
         try {
             const state = JSON.parse(storedState);
             console.log('📂 Timer-Zustand geladen:', state);
-            
-            // Prüfe ob Target-Dates geändert wurden
-            const currentTargets = {
-                timer1: TARGET_DATES.timer1.toISOString(),
-                timer2: TARGET_DATES.timer2.toISOString(),
-                timer3: TARGET_DATES.timer3.toISOString(),
-                timer4: TARGET_DATES.timer4.toISOString()
-            };
-            
-            // Wenn sich Target-Dates geändert haben, update den State
-            if (JSON.stringify(currentTargets) !== JSON.stringify(state.targetDates)) {
-                console.log('🔄 Target-Dates haben sich geändert, aktualisiere...');
-                saveTimerState();
-            }
-            
             return true;
         } catch (error) {
             console.error('❌ Fehler beim Laden des Timer-Zustands:', error);
@@ -205,7 +198,7 @@ function calculateElapsedTime(startDate, currentDate = new Date()) {
 }
 
 /**
- * Aktualisiert die Anzeige einer zweistelligen Zahl
+ * Aktualisiert die Anzeige einer zweistelligen Zahl (VEREINFACHT)
  * @param {string} prefix - Präfix für die Element-IDs
  * @param {number} value - Anzuzeigender Wert
  */
@@ -217,13 +210,24 @@ function updateDigitDisplay(prefix, value) {
     const onesElement = document.getElementById(`${prefix}-ones`);
     
     if (tensElement && onesElement) {
-        const tensContent = tensElement.querySelector('.digit-content');
-        const onesContent = onesElement.querySelector('.digit-content');
+        // Direkte Textinhalt-Aktualisierung (einfacher)
+        tensElement.textContent = tens;
+        onesElement.textContent = ones;
         
-        if (tensContent && onesContent) {
-            tensContent.textContent = tens;
-            onesContent.textContent = ones;
+        // Füge digit-content Wrapper hinzu falls nicht vorhanden
+        if (!tensElement.querySelector('.digit-content')) {
+            tensElement.innerHTML = `<span class="digit-content">${tens}</span>`;
+        } else {
+            tensElement.querySelector('.digit-content').textContent = tens;
         }
+        
+        if (!onesElement.querySelector('.digit-content')) {
+            onesElement.innerHTML = `<span class="digit-content">${ones}</span>`;
+        } else {
+            onesElement.querySelector('.digit-content').textContent = ones;
+        }
+    } else {
+        console.warn(`⚠️ Elemente für ${prefix} nicht gefunden`);
     }
 }
 
@@ -261,6 +265,11 @@ function updateUptimeDisplay(elapsedTime) {
  * Aktualisiert alle Timer synchron
  */
 function updateAllTimers() {
+    if (!UPTIME_START) {
+        console.warn('⚠️ UPTIME_START nicht initialisiert');
+        return;
+    }
+    
     // Eine einzige currentTime für alle Timer (perfekte Synchronisation)
     const currentTime = new Date();
     
@@ -274,8 +283,10 @@ function updateAllTimers() {
     const elapsedTime = calculateElapsedTime(UPTIME_START, currentTime);
     updateUptimeDisplay(elapsedTime);
     
-    // Zustand speichern für Persistierung
-    saveTimerState();
+    // Zustand speichern für Persistierung (weniger häufig)
+    if (Math.floor(currentTime.getTime() / 1000) % 10 === 0) {
+        saveTimerState();
+    }
 }
 
 /**
@@ -283,8 +294,6 @@ function updateAllTimers() {
  */
 function updateAllTimersWithAnimation() {
     updateAllTimers();
-    
-    // Optional: Hier könnten Animationen hinzugefügt werden
     // console.log('🕰️ Timer aktualisiert:', new Date().toLocaleTimeString());
 }
 
@@ -294,34 +303,13 @@ function updateAllTimersWithAnimation() {
 function initializeDOM() {
     console.log('🏗️ DOM wird initialisiert...');
     
-    // Prüfe ob alle nötigen Elemente vorhanden sind
-    const requiredElements = [
-        'timer1-months-tens', 'timer1-months-ones',
-        'timer2-months-tens', 'timer2-months-ones',
-        'timer3-months-tens', 'timer3-months-ones',
-        'timer4-months-tens', 'timer4-months-ones',
-        'uptime-months-tens', 'uptime-months-ones'
-    ];
+    // Lade Timer-Zustand falls vorhanden
+    loadTimerState();
     
-    let allElementsFound = true;
-    requiredElements.forEach(id => {
-        if (!document.getElementById(id)) {
-            console.error(`❌ Element mit ID '${id}' nicht gefunden!`);
-            allElementsFound = false;
-        }
-    });
+    // Starte die App immer
+    initializeApp();
     
-    if (allElementsFound) {
-        console.log('✅ Alle DOM-Elemente gefunden');
-        
-        // Lade Timer-Zustand falls vorhanden
-        loadTimerState();
-        
-        // Starte die App
-        initializeApp();
-    } else {
-        console.error('❌ Nicht alle nötigen DOM-Elemente gefunden');
-    }
+    console.log('✅ DOM-Initialisierung abgeschlossen');
 }
 
 // Warte auf DOM-Ready
@@ -337,18 +325,19 @@ window.timerDebug = {
         appStartTime: APP_START_TIME,
         uptimeStart: UPTIME_START,
         targetDates: TARGET_DATES,
-        currentCalculations: {
+        currentCalculations: UPTIME_START ? {
             timer1: calculateTimeDifference(TARGET_DATES.timer1),
             timer2: calculateTimeDifference(TARGET_DATES.timer2),
             timer3: calculateTimeDifference(TARGET_DATES.timer3),
             timer4: calculateTimeDifference(TARGET_DATES.timer4),
             uptime: calculateElapsedTime(UPTIME_START)
-        }
+        } : 'UPTIME_START nicht initialisiert'
     }),
     resetUptime: () => {
         UPTIME_START = new Date();
         localStorage.setItem('uptimeStart', UPTIME_START.toISOString());
         saveTimerState();
+        updateAllTimers();
         console.log('🔄 Uptime zurückgesetzt');
     },
     resetApp: () => {
@@ -357,6 +346,7 @@ window.timerDebug = {
         localStorage.setItem('appStartTime', APP_START_TIME.toISOString());
         localStorage.setItem('uptimeStart', UPTIME_START.toISOString());
         saveTimerState();
+        updateAllTimers();
         console.log('🔄 App komplett zurückgesetzt');
     },
     clearStorage: () => {
